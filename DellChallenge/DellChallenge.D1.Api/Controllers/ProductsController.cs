@@ -1,8 +1,12 @@
 ﻿using DellChallenge.D1.Api.Dal;
 using DellChallenge.D1.Api.Dto;
+using DellChallenge.D1.Api.Exceptions;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DellChallenge.D1.Api.Controllers
 {
@@ -26,9 +30,15 @@ namespace DellChallenge.D1.Api.Controllers
 
         [HttpGet("{id}")]
         [EnableCors("AllowReactCors")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<string> Get(string id)
         {
-            return "value";
+            var product = _productsService.GetAll().First(x => x.Id == id);
+            if (product == null)
+            {
+                return NotFound($"Product with id {id} was not found.");
+            }
+
+            return Ok(product);
         }
 
         [HttpPost]
@@ -41,14 +51,42 @@ namespace DellChallenge.D1.Api.Controllers
 
         [HttpDelete("{id}")]
         [EnableCors("AllowReactCors")]
-        public void Delete(int id)
+        public IActionResult Delete(string id)
         {
+            try
+            {
+                _productsService.Delete(id);
+
+                return NoContent();
+            }
+            catch (ProductException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something unexpected occurred. Please contact the system administration.");
+            }
         }
 
         [HttpPut("{id}")]
         [EnableCors("AllowReactCors")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(string id, [FromBody] UpdateProductDto product)
         {
+            try
+            {
+                _productsService.Update(id, product);
+
+                return NoContent();
+            }
+            catch (ProductException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something unexpected occurred. Please contact the system administration.");
+            }
         }
     }
 }

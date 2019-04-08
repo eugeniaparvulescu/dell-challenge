@@ -16,47 +16,94 @@ namespace DellChallenge.B
     {
         void Eat();
         void Drink();
+    }
+
+    public interface ICanFly
+    {
         void Fly();
+    }
+
+    public interface ICanSwim
+    {
         void Swim();
     }
 
-    public class Species
+    public abstract class Species : ISpecies
     {
+        public abstract void Drink();
+
+        public abstract void Eat();
+
         public virtual void GetSpecies()
         {
-            Console.WriteLine($"Echo who am I?");
+            Console.Write($"I am a ");
         }
     }
 
-    public class Human : ISpecies
+    public class Human : Species
     {
-        public void Drink()
+        public override void Drink()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("I drink ginger beer.");
         }
 
-        public void Eat()
+        public override void Eat()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("I eat spaghetti.");
+        }
+
+        public override void GetSpecies()
+        {
+            base.GetSpecies();
+            Console.WriteLine("human.");
+        }
+    }
+
+    public class Bird : Species, ICanFly
+    {
+        public override void Drink()
+        {
+            Console.WriteLine("I drink water when I find it.");
+        }
+
+        public override void Eat()
+        {
+            Console.WriteLine("I eat insects.");
         }
 
         public void Fly()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("I can flyyyyyyy!");
+        }
+
+        public override void GetSpecies()
+        {
+            base.GetSpecies();
+            Console.WriteLine("bird.");
+        }
+    }
+
+    public class Fish : Species, ICanSwim
+    {
+        public override void Drink()
+        {
+            Console.WriteLine("I drink water.");
+        }
+
+        public override void Eat()
+        {
+            Console.WriteLine("I eat smaller fishes.");
         }
 
         public void Swim()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("I can swimmmmm!");
+        }
+
+        public override void GetSpecies()
+        {
+            base.GetSpecies();
+            Console.WriteLine("fish.");
         }
     }
-
-    public class Bird
-    {
-    }
-
-    public class Fish
-    {
-    }
 }
-

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DellChallenge.D1.Api.Dto;
+using DellChallenge.D1.Api.Exceptions;
 
 namespace DellChallenge.D1.Api.Dal
 {
@@ -27,9 +28,48 @@ namespace DellChallenge.D1.Api.Dal
             return addedDto;
         }
 
+        public ProductDto Update(string id, UpdateProductDto value)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ProductException("Invalid id.");
+            }
+            if (value == null)
+            {
+                throw new ProductException("Invalid request.");
+            }
+
+            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
+            {
+                throw new ProductException($"The product with id { id } does not exist.");
+            }
+
+            MapToData(value, product);
+            _context.SaveChanges();
+            var updatedDto = MapToDto(product);
+
+            return updatedDto;
+        }
+
         public ProductDto Delete(string id)
         {
-            throw new System.NotImplementedException();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ProductException("Invalid id.");
+            }
+
+            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
+            {
+                throw new ProductException($"The product with id { id } does not exist.");
+            }
+
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+            var deletedDto = MapToDto(product);
+
+            return deletedDto;
         }
 
         private Product MapToData(NewProductDto newProduct)
@@ -39,6 +79,12 @@ namespace DellChallenge.D1.Api.Dal
                 Category = newProduct.Category,
                 Name = newProduct.Name
             };
+        }
+
+        private void MapToData(UpdateProductDto source, Product destination)
+        {
+            destination.Category = source.Category;
+            destination.Name = source.Name;
         }
 
         private ProductDto MapToDto(Product product)

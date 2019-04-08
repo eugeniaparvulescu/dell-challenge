@@ -1,0 +1,21 @@
+﻿@model DellChallenge.D2.Web.Models.ProductModel
+
+@{
+    ViewData["Title"] = "View";
+}
+<h4>Are you sure you want to delete product @Model.Name (@Model.Id)?</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DeleteConfirmed">
+            <input asp-for="Id" type="hidden" />
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

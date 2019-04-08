@@ -10,30 +10,28 @@ namespace DellChallenge.C
             //      1. clean coding
             //      2. naming standards
             //      3. code reusability, hence maintainability
-            StartHere();
+
+            var operations = new Operations();
+            var results = Calculate(operations);
+            Print(results);
+
             Console.ReadKey();
         }
 
-        private static void StartHere()
+        private static int[] Calculate(Operations operations)
         {
-            myObject _MyNewObject = new myObject();
-            int obj1 = _MyNewObject.Do(1, 3);
-            int num2 = _MyNewObject.DoExtended(1, 3, 5);
-            Console.WriteLine(obj1);
-            Console.WriteLine(num2);
-        }
-    }
+            int sumOfTwo = operations.Add(1, 3);
+            int sumOfThree = operations.Add(1, 3, 5);
 
-    class myObject
-    {
-
-        public int Do(int a, int b)
-        {
-            return a + b;
+            return new int[] { sumOfTwo, sumOfThree };
         }
 
-        public int DoExtended(int a, int b, int c)
-        { return a + b + c;
+        private static void Print(int[] values)
+        {
+            foreach (int value in values)
+            {
+                Console.WriteLine(value);
+            }
         }
     }
 }

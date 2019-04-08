@@ -2,8 +2,11 @@
 
 namespace DellChallenge.D2.Web.Models
 {
-    public class NewProductModel
+    public class UpdateProductModel
     {
+        [Required]
+        public string Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
